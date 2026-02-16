@@ -1,0 +1,12 @@
+# 개발용
+# ./gradlew bootRun -Dspring.profiles.active=dev
+# .\gradlew.bat bootRun --args='--spring.profiles.active=dev'
+spring:
+  datasource:
+    url: jdbc:mariadb://<HOME_SERVER_LAN_IP>:3306/cicd_dev
+    username: cicd_user
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
