@@ -3,7 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '4.0.2'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'jacoco'  // 코드 커버리지
-	id 'org.sonarqube' version '4.4.1.3373'  // SonarQube 플러그인
+	id 'org.sonarqube' version '5.0.0.4638'  // SonarQube 플러그인
 }
 
 group = 'com.kmg22'
@@ -62,11 +62,15 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "my-project"
-        property "sonar.projectName", "My CI/CD Project"
+        property "sonar.projectKey", "cicd"
+        property "sonar.projectName", "cicd"
         property "sonar.java.coveragePlugin", "jacoco"
         property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     }
+}
+
+tasks.named("sonar") {
+  dependsOn "test", "jacocoTestReport"
 }
 
 tasks.named('test') {
