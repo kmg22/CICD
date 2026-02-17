@@ -22,7 +22,7 @@ pipeline {
       steps {
         sh '''
           chmod +x gradlew
-          ./gradlew clean test jacocoTestReport --no-daemon
+          ./gradlew clean build jacocoTestReport --no-daemon
         '''
       }
       post {
