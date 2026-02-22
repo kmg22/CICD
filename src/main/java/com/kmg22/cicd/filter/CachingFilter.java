@@ -4,6 +4,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
@@ -65,6 +67,7 @@ public class CachingFilter extends OncePerRequestFilter {
     public static class CachedBodyResponseWrapper extends jakarta.servlet.http.HttpServletResponseWrapper {
         private final ByteArrayOutputStream cachedBody = new ByteArrayOutputStream();
         private PrintWriter writer;
+        private ServletOutputStream outputStream;
 
         public CachedBodyResponseWrapper(HttpServletResponse response) {
             super(response);
@@ -76,6 +79,23 @@ public class CachingFilter extends OncePerRequestFilter {
                 writer = new PrintWriter(new OutputStreamWriter(cachedBody, StandardCharsets.UTF_8));
             }
             return writer;
+        }
+
+        @Override
+        public ServletOutputStream getOutputStream() throws IOException {
+            if (outputStream == null) {
+                outputStream = new ServletOutputStream() {
+                    @Override
+                    public void write(int b) {
+                        cachedBody.write(b);
+                    }
+                    @Override
+                    public boolean isReady() { return true; }
+                    @Override
+                    public void setWriteListener(WriteListener listener) {}
+                };
+            }
+            return outputStream;
         }
 
         public byte[] getCachedBody() {
