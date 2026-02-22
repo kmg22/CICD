@@ -36,13 +36,13 @@ public class LoggingInterceptor implements HandlerInterceptor {
             responseBody = new String(wrapper.getCachedBody(), StandardCharsets.UTF_8);
         }
 
-        log.info("\n[REQUEST]  {} {} {}ms\n  body: {}\n[RESPONSE] {}\n  body: {}",
+        log.info("[{}] {} {} {}ms | req: {} | res: {}",
+            response.getStatus(),
             request.getMethod(),
             request.getRequestURI(),
             duration,
-            requestBody.isBlank() ? "(없음)" : requestBody,
-            response.getStatus(),
-            responseBody.isBlank() ? "(없음)" : responseBody
+            requestBody.isBlank() ? "-" : requestBody,
+            responseBody.isBlank() ? "-" : responseBody
         );
     }
 }
